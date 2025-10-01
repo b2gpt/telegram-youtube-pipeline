@@ -1,34 +1,24 @@
 import os
 from telethon.sync import TelegramClient
-from dotenv import load_dotenv
-
-# 🔐 Load environment variables
-load_dotenv()
-
-# ✅ Credentials from .env
-api_id = int(os.getenv("TELEGRAM_API_ID"))
-api_hash = os.getenv("TELEGRAM_API_HASH")
-channel_url = os.getenv("TELEGRAM_CHANNEL")  # e.g. "https://t.me/testingnowdone"
-
-# 🧠 Extract username from full URL
-channel_username = channel_url.replace("https://t.me/", "").replace("t.me/", "").strip()
-
-# 📁 Output path
-output_folder = "video"
-output_file = os.path.join(output_folder, "video.mp4")
 
 def fetch_video():
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
+    api_id_raw = os.getenv("TELEGRAM_API_ID")
+    api_hash = os.getenv("TELEGRAM_API_HASH")
+    bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+
+    if not api_id_raw or not api_hash or not bot_token:
+        raise ValueError("Missing TELEGRAM_API_ID, API_HASH, or BOT_TOKEN in Railway Variables")
+
+    api_id = int(api_id_raw)
 
     with TelegramClient("session", api_id, api_hash) as client:
-        messages = client.get_messages(channel_username, limit=10)
-        for msg in messages:
-            if msg.video:
-                print("🎥 Found video:", msg.id)
-                msg.download_media(file=output_file)
-                print("✅ Saved to:", output_file)
-                return output_file
+        client.start(bot_token=bot_token)
 
-    print("❌ No video found.")
+        # Example: fetch latest video message
+        messages = client.get_messages("your_channel_username", limit=1)
+        for msg in messages:
+            if msg.video or msg.document:
+                file_path = client.download_media(msg)
+                return file_path
+
     return None
