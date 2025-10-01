@@ -1,0 +1,6 @@
+.env
+bot/youtube_auth/client_secret.json
+bot/youtube_auth/token.json
+bot/youtube_auth/session.session
+__pycache__/
+*.pyc
