@@ -13,7 +13,7 @@ print("DEBUG: API_ID =", os.getenv("TELEGRAM_API_ID"))
 api_id = int(os.getenv("TELEGRAM_API_ID"))
 api_hash = os.getenv("TELEGRAM_API_HASH")
 
-client = TelegramClient("session", api_id, api_hash)
+client = TelegramClient("session", api_id, api_hash).start(bot_token=bot_token)
 client.start()  # ✅ OTP maangega
 
 print("✅ Session file created: session.session")
