@@ -1,7 +1,0 @@
-services:
-  - type: web
-    name: telegram-youtube-bot
-    env: python
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "python login_once.py && python bot/main.py"
-    pythonVersion: 3.11
